@@ -1,11 +1,11 @@
-# 1단계: 빌드
-FROM eclipse-temurin:17-jdk AS build
-WORKDIR /app
-COPY . .
-RUN ./mvnw clean package -DskipTests
+# 최신 nginx 이미지
+FROM nginx:latest
 
-# 2단계: 실행
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# nginx 기본 문서 루트는 /usr/share/nginx/html
+RUN rm -rf /usr/share/nginx/html/*
+
+# 프로젝트 정적 파일 복사
+COPY project/ /usr/share/nginx/html/
+
+EXPOSE 80
+
